@@ -90,28 +90,63 @@ Now produce the same contract for the target endpoint.
 
 ---
 
-## Final prompt, run on two models
+## Final prompt, run on two models (real runs)
 
 **Final prompt:** V4's decomposition + V3's output structure + V1 role + V2 context,
-with the V5 example included but explicitly marked "for format only, do not reuse
-its field names."
+given the same evidence (the observed `<form>` snippet) to both models. Ground truth
+was known — I'd already built the working CLI — so I could grade accuracy, not vibes.
 
-**Claude:** cautious and verification-first. It refused to state the auth field as
-fact until the "verify with one request" step, and flagged *which* claims it was
-inferring vs. reading. Tone: dry, hedged where it should be. Failure point: slightly
-over-explained the RSC background I didn't ask for.
+**GPT-5.5** (run via the Codex CLI):
 
-**ChatGPT (GPT):** more decisive and better formatted out of the box — clean table,
-confident contract. Failure point: that confidence cut both ways — it **invented a
-plausible `/api/submit` REST endpoint** that doesn't exist, exactly the kind of
-hallucination that's dangerous here because it *looks* right. It only self-corrected
-when I added "confirm the endpoint exists in the traffic before stating it."
+```
+POST | inferred - verify: /intern/assignments/FL-02 (form action absent) |
+inferred - verify: $ACTION_ID_403289...c723, program_item_id=FL-02,
+return_path=/intern/assignments/FL-02, deliverable_urls, notes, attachments;
+multipart/form-data | Cookie: __Secure-authjs.session-token=<token> |
+One POST to the verified form URL; inspect response/status. Deploy-proof: fetch the
+page and extract the current $ACTION_ID_* before each submission; no REST API
+appears in the provided evidence.
+```
 
-**Specific takeaway (not "both were fine"):** for reverse-engineering, Claude's
-hedging is a feature — it maps cleanly to "don't trust a field until a real request
-returns 2xx." GPT gets me a cleaner artifact faster but needs an explicit
-"don't invent endpoints; cite the traffic" guard or it will confidently fabricate
-one. I'd draft with GPT, verify with Claude.
+**Claude:**
+
+```
+METHOD: POST
+URL: /intern/assignments/FL-02 — form has method=POST and no action, so a no-JS
+     submit posts to the current page URL (Next.js MPA Server Action). Verify.
+required fields: $ACTION_ID_...c723 (name is the action marker, empty value),
+     program_item_id=FL-02, return_path=/intern/assignments/FL-02,
+     deliverable_urls, notes, attachments (optional); multipart/form-data
+auth: Cookie __Secure-authjs.session-token (Auth.js). Plus: Server Actions require
+     the Origin header to match Host (built-in CSRF check) — inferred, verify.
+verification: one multipart POST with cookie + Origin header; success = 303 to
+     return_path. Deploy-proof: scrape the $ACTION_ID hash from the page each run.
+```
+
+**Honest comparison (not "both were fine"):**
+
+- **Accuracy:** both got the core contract right and — notably — **neither
+  hallucinated a REST endpoint.** GPT-5.5 explicitly stated "no REST API appears in
+  the provided evidence." (I expected the classic confident-fabrication failure and
+  did not get it; that's the value of actually running it instead of assuming.)
+- **Discipline vs. completeness:** GPT was more *literal* about the "mark inferred"
+  rule — it flagged even the URL as `inferred - verify` because the form's `action`
+  attribute was empty. Claude *committed* to the URL with the reasoning (the Next.js
+  no-action convention) but still said verify. GPT errs cautious; Claude errs toward
+  committing-with-justification.
+- **The decisive difference — two details only Claude gave, both operationally
+  required:** (1) the **Origin-header CSRF check** Next.js enforces on Server
+  Actions — miss it and the POST is rejected; my real CLI sets it. (2) **success =
+  HTTP 303**, the concrete signal to check. GPT's "inspect response/status" is
+  correct but wouldn't have told me *what* to look for.
+- **Tone/structure:** GPT packed it into one dense line (great for a machine,
+  harder to read); Claude used the labeled structure and was easier to scan.
+
+**Takeaway:** for this task GPT-5.5 is accurate and admirably disciplined about not
+overclaiming — the "invents endpoints" reputation didn't hold on a real run. But
+Claude surfaced the two things that make the request *actually succeed* (Origin
+header, 303). I'd take Claude's answer to implement from, and keep GPT's literal
+"mark everything inferred until a request confirms it" as the verification mindset.
 
 ---
 
