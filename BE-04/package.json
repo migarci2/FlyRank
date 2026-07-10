@@ -1,0 +1,14 @@
+{
+  "name": "be-04-containerized-stack",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Small service with a swappable in-memory <-> Postgres repository.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test.js"
+  },
+  "dependencies": {
+    "pg": "^8.11.3"
+  }
+}
