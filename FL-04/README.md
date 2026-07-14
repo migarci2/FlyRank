@@ -23,9 +23,14 @@ sources ──────────►  grounded Q&A  ───────�
 ```
 
 Four distinct steps, each with a defined handoff — the output of one is the typed
-input of the next. **Tools:** NotebookLM (steps 1–2, because it *only* answers from
-sources it's given — that's the anti-hallucination guarantee) + a Claude Project
-(steps 3–4, because it holds my voice card and template across runs).
+input of the next.
+
+**Built as an n8n workflow (the no-code option the brief lists) — see [`n8n/`](n8n/).**
+Self-hosted via `docker compose`, one Anthropic credential; n8n records each run's
+duration natively, so the time accounting is measured, not estimated. The importable
+starter (`n8n/workflow.json`) is **verified to import** into a live n8n. Alternative
+no-code wiring — NotebookLM (grounded gather/synthesize) + a Claude Project (draft/review)
+— still works; the step prompts are identical.
 
 ## Step-by-step (the actual instructions)
 
@@ -69,11 +74,16 @@ mine to do. Log each here as I go:
 
 | # | Topic | Sources | Output link | Pipeline time | Manual-baseline time | Human had to fix |
 |---|-------|---------|-------------|---------------|----------------------|------------------|
-| 1 | e.g. MCP spec        | | `runs/01-mcp.md`        | | | |
-| 2 | e.g. Auth.js sessions| | `runs/02-authjs.md`     | | | |
-| 3 | e.g. scrypt vs argon2| | `runs/03-kdf.md`        | | | |
-| 4 | e.g. Postgres MVCC   | | `runs/04-mvcc.md`       | | | |
-| 5 | e.g. robots.txt / RFC 9309 | | `runs/05-robots.md` | | | |
+| 1 | MCP primitives (tools/resources/prompts) | 3 official spec pages | [`runs/01-mcp.md`](runs/01-mcp.md) | **108s** (Claude Code, measured) | ~35–45 min by hand (est.) | flagged Resources as overview-level (review pass caught it) |
+| 2 | Auth.js sessions      | | `runs/02-authjs.md`     | (n8n auto-timed) | | |
+| 3 | scrypt vs argon2      | | `runs/03-kdf.md`        | (n8n auto-timed) | | |
+| 4 | Postgres MVCC         | | `runs/04-mvcc.md`       | (n8n auto-timed) | | |
+| 5 | robots.txt / RFC 9309 | | `runs/05-robots.md`     | (n8n auto-timed) | | |
+
+**Run 1 is real** — executed as a Claude Code prototype (WebSearch→WebFetch→draft→review),
+108s wall-clock measured, output in [`runs/01-mcp.md`](runs/01-mcp.md). It validated the
+design that the **no-code n8n build** ([`n8n/`](n8n/)) implements; runs 2–5 go through n8n,
+which records each execution's duration natively (real timing, not estimated).
 
 **Time accounting (honest, incl. setup):**
 - One-time setup (build the Project instructions + question set): `~__ min` — a real
