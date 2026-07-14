@@ -1,0 +1,11 @@
+{
+  "name": "be-scraper-polite",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A polite scraper: obeys robots.txt, identifies itself, rate-limits, backs off, and saves clean structured JSONL. Stdlib + global fetch, zero dependencies.",
+  "main": "scraper.js",
+  "scripts": {
+    "start": "node scraper.js",
+    "test": "node test.js"
+  }
+}
