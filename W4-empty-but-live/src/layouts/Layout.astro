@@ -1,0 +1,43 @@
+---
+// The one layout every page will share (this is why Astro won over plain HTML —
+// head/fonts/colors written once). Identity kit: ../../../W3-identity-kit
+const { title = "Miguel Garcia Roman" } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- IBM Plex Mono (headings) + Inter (body), the identity-kit type -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Inter:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style is:global>
+      :root {
+        --bg: #fbfbf9;
+        --ink: #17181b;
+        --brand: #1f3a5f;
+        --accent: #15803d;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "Inter", system-ui, sans-serif;
+        line-height: 1.6;
+      }
+      h1, h2 { font-family: "IBM Plex Mono", ui-monospace, monospace; color: var(--brand); }
+      a { color: var(--brand); }
+    </style>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
