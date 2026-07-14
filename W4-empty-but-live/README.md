@@ -49,16 +49,16 @@ for static assets. Superseded by the real site above; not the deployed portfolio
 - [x] Stack decision — [../W4-choose-stack](../W4-choose-stack)
 - [x] Case studies — [../W2-frame-it-as-cases](../W2-frame-it-as-cases)
 
-## ⬜ The part only I can do (not faked)
+## Second-device proof
 
-- [ ] Open **[migarci2.dev](https://migarci2.dev) on my phone** (second device) and
-      screenshot it → `proof-phone.png`. The site is live and reachable; the
-      second-device photo is the manual proof the assignment asks for.
+- [x] Opened **[migarci2.dev](https://migarci2.dev) on my phone** (real mobile Chrome)
+      → [`proof-phone.jpeg`](./proof-phone.jpeg). Loads on a second device, not just
+      the laptop.
 
 ## Pass / revise — self-check
 
 - **A real, reachable URL, opened on a second device** → live + curl-verified at
-  migarci2.dev; phone screenshot is the one manual step above. ✓ / ⬜
+  migarci2.dev, and opened on my phone ([proof-phone.jpeg](./proof-phone.jpeg)). ✓
 - **Matches the chosen stack** → Next.js static export on Cloudflare, per
   [W4-choose-stack](../W4-choose-stack). ✓
 - **Project has identity kit, cases, content map loaded** → checklist above. ✓
