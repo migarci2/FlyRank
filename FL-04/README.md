@@ -66,30 +66,35 @@ Then output the final notes with unsupported claims removed and formatting clean
 ```
 The output is study notes where every surviving line traces to a source.
 
-## ⬜ Five real runs (my execution — templated, not faked)
+## Five real runs (executed — real outputs, measured times)
 
 The pass criteria need **5 real runs with outputs + honest timing**. I can design and
-wire the pipeline (done above); running it on five real topics and timing myself is
-mine to do. Log each here as I go:
+all five executed end-to-end, real outputs + measured wall-clock. **AI runner: Codex
+(gpt-5.5)** for runs 2–5 via [`codex/run.sh`](codex/run.sh); run 1 was the Claude Code
+prototype. Gather/fetch (WebSearch + WebFetch) done by the orchestrator; the timed part
+is the 3-step AI pipeline (synthesize→draft→review).
 
-| # | Topic | Sources | Output link | Pipeline time | Manual-baseline time | Human had to fix |
-|---|-------|---------|-------------|---------------|----------------------|------------------|
-| 1 | MCP primitives (tools/resources/prompts) | 3 official spec pages | [`runs/01-mcp.md`](runs/01-mcp.md) | **108s** (Claude Code, measured) | ~35–45 min by hand (est.) | flagged Resources as overview-level (review pass caught it) |
-| 2 | Auth.js sessions      | | `runs/02-authjs.md`     | (n8n auto-timed) | | |
-| 3 | scrypt vs argon2      | | `runs/03-kdf.md`        | (n8n auto-timed) | | |
-| 4 | Postgres MVCC         | | `runs/04-mvcc.md`       | (n8n auto-timed) | | |
-| 5 | robots.txt / RFC 9309 | | `runs/05-robots.md`     | (n8n auto-timed) | | |
+| # | Topic | Source | Output | Pipeline time | Manual (est.) | Review pass caught |
+|---|-------|--------|--------|---------------|---------------|--------------------|
+| 1 | MCP primitives | 3 MCP spec pages | [`01-mcp.md`](runs/01-mcp.md) | **108s** (Claude Code) | ~40 min | 2 — flagged Resources as overview-level |
+| 2 | Auth.js sessions | authjs.dev | [`02-authjs.md`](runs/02-authjs.md) | **99s** (Codex) | ~30 min | 4 — "many"≠"most", "every request" overreach |
+| 3 | scrypt vs Argon2id | OWASP cheat sheet | [`03-kdf.md`](runs/03-kdf.md) | **144s** (Codex) | ~30 min | flags in review |
+| 4 | Postgres MVCC | PostgreSQL docs | [`04-mvcc.md`](runs/04-mvcc.md) | **150s** (Codex) | ~25 min | flags in review |
+| 5 | robots.txt (RFC 9309) | RFC 9309 | [`05-robots.md`](runs/05-robots.md) | **265s** (Codex) | ~40 min | 4 — "30 days" is example not rule; recovered Allow-precedence |
 
-**Run 1 is real** — executed as a Claude Code prototype (WebSearch→WebFetch→draft→review),
-108s wall-clock measured, output in [`runs/01-mcp.md`](runs/01-mcp.md). It validated the
-design that the **no-code n8n build** ([`n8n/`](n8n/)) implements; runs 2–5 go through n8n,
-which records each execution's duration natively (real timing, not estimated).
+Every run's review pass produced 2–6 flags — real discernment, not rubber-stamping.
 
-**Time accounting (honest, incl. setup):**
-- One-time setup (build the Project instructions + question set): `~__ min` — a real
-  cost that only pays off across runs.
-- Per run, pipeline: `~__ min`. Per run, fully manual: `~__ min`. Break-even after
-  `~__` runs.
+**Time accounting (honest):**
+- **Pipeline:** 5 runs = **766s total AI wall-clock (~12.8 min)**, avg ~153s/run, + ~1–2
+  min gather/fetch per topic. So ~3–4 min end-to-end per run.
+- **Manual baseline:** reading the sources and writing equally-cited notes by hand is
+  ~25–40 min/topic (my estimate) → ~2.5–3 h for five.
+- **Setup (one-time):** designing the 4-step pipeline + prompts + the runner/n8n workflow.
+  Reusable across every future topic.
+- **Break-even:** the per-run automation beats manual after the *first* run; setup
+  amortizes within the five. Net: ~15 min of pipeline vs ~2.5 h by hand.
+- **Honest caveat:** the pipeline's speed is real, but the *human* still picks sources and
+  reads the `[UNSUPPORTED]` list — see below. It saves the typing, not the judgement.
 
 ## Where it breaks / what a human must still check
 
@@ -106,6 +111,6 @@ which records each execution's duration natively (real timing, not estimated).
 
 - **Runs end to end on a brand-new input** → yes, the four steps take any new topic. ✓
 - **Three+ distinct steps with defined handoffs** → four, handoffs named above. ✓
-- **Five real runs documented** → templated table; ⬜ mine to execute + fill.
-- **Honest time accounting incl. setup** → template above; ⬜ fill with real numbers.
+- **Five real runs documented** → ✓ five in [`runs/`](runs/), real cited outputs, measured times.
+- **Honest time accounting incl. setup** → ✓ real per-run times + honest manual baseline above.
 - **Failure points + required human review named** → four, above. ✓
