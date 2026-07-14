@@ -2,68 +2,65 @@
 
 Assignment: *Decide Once: Build Your Identity Kit* (General AI Fluency, Week 3)
 Author: Miguel Garcia Roman
-Claim it frames: see [../W1-what-are-you-proving](../W1-what-are-you-proving)
+Live site it governs: **[migarci2.dev](https://migarci2.dev)**
 
-The whole point: decide the look once so the build weeks don't re-litigate it, and
-keep it calm enough that the loudest thing on the page is the work — the terminal
-screenshots and the code, not the chrome around them.
+The identity is already shipping on the real site — this is the kit written down so
+every build stays consistent. One mood: **a terminal booted in deep space.** Dark,
+pixel type, one amber signal; the work (projects, patches, the ⌘K terminal) is what
+moves, the chrome stays quiet.
 
-## Type (two fonts, both free)
+## Type (one font, on purpose)
 
-| Role | Font | Weight | Why |
-|------|------|--------|-----|
-| Heading | **IBM Plex Mono** | 500 | Monospaced headings read as *terminal*. My claim is "I read the wire and ship the CLI" — the type says it before a word does. |
-| Body | **Inter** | 400 / 500 | Plain, high-legibility grotesque. Gets out of the way so a reviewer reads the case, not the font. |
+| Role | Font | Why |
+|------|------|-----|
+| Everything (headings + body) | **Geist Pixel Square** | A pixel-grid monospace. It says *low-level / terminal* before a word is read — which is exactly the work (kernel, C/C++, CTF, agents). One face, no pairing to babysit. |
 
-Both on Google Fonts (SIL Open Font License). Two families, not a pile — mono for
-the few big lines, Inter for everything you actually read.
+Free, from Vercel's `geist` package (OFL). Fallback: `ui-monospace, monospace`.
 
-## Palette (4 colors, calm on purpose)
+## Palette (dark, one accent)
 
 | Token | Hex | Use |
 |-------|-----|-----|
-| `--bg` | `#FBFBF9` | Near-white, faintly warm — paper, not glare. |
-| `--ink` | `#17181B` | Near-black. All body text. |
-| `--brand` | `#1F3A5F` | Deep slate blue. Headings, the monogram, links. The one "color." |
-| `--accent` | `#15803D` | Muted green. Used *once per page* — the primary CTA / the "it works" signal. |
+| `--bg` | `#0F0E0C` | Near-black, warm. The void. |
+| `--ink` | `#F0E8D4` | Warm cream. Primary text. |
+| `--muted` | `#8B8475` | Labels, nav, secondary. |
+| `--dim` | `#5A5550` | Borders, hairlines, `//` markers. |
+| `--accent` | `#E8B557` | **Amber.** The one signal color: prompt cursor, CTA, `-->`, selection. |
 
-The accent isn't decoration: green is the `303` my portal CLI returns on a real
-submit (my proof statement's punchline). It marks the one thing I want clicked and
-nothing else, so a single button is the only loud pixel on a quiet page.
+Four greys-of-warmth + one amber. The accent is scarce on purpose — it marks the
+cursor, the primary CTA (`contact`), and the hover arrow, nothing else, so the eye
+follows the action.
 
 ```css
 :root {
-  --bg:     #FBFBF9;
-  --ink:    #17181B;
-  --brand:  #1F3A5F;
-  --accent: #15803D;
+  --bg:#0F0E0C; --ink:#F0E8D4; --muted:#8B8475; --dim:#5A5550; --accent:#E8B557;
 }
+::selection { background:#E8B557; color:#0F0E0C; }
 ```
+
+**Data accents (charts/tags only):** each project/stat gets one hue so a row reads as
+distinct without adding chrome — `#4A8FE7` blue, `#9B7DD4` purple, `#E0497A` pink,
+`#E8B557` amber. Used only as a small `●` marker, never as backgrounds.
 
 ## Logo / favicon
 
-[`favicon.svg`](./favicon.svg) — an `mg` monogram set in the heading font (IBM Plex
-Mono) on a `--brand` tile, rounded corners, near-white glyphs. Lowercase, no
-gradient, no icon-of-a-thing. It's just my initials in my own type — which means
-the favicon and the H1 are visibly the same identity. SVG so it's crisp at any
-size and needs no PNG export step.
+[`favicon.svg`](./favicon.svg) — lowercase `m` in the pixel face plus an **amber block
+cursor**, on the `--bg` tile. It reads as a command prompt (`m▮`), which is the whole
+identity in 32px. Matches the nav wordmark `migarci2.dev _` (blinking amber `_`).
 
 ## Style note (pasted into the Claude Project)
 
-> **Type:** IBM Plex Mono (headings, 500) + Inter (body, 400). **Palette:** bg
-> `#FBFBF9`, ink `#17181B`, brand slate-blue `#1F3A5F`, accent green `#15803D`
-> (one CTA per page only). **Mood:** a terminal at rest — calm, monospaced,
-> lots of whitespace; the work (screenshots, code) is the only loud thing, the
-> page never competes with it.
+> **Type:** Geist Pixel Square, one face for everything. **Palette:** bg `#0F0E0C`,
+> text `#F0E8D4`, muted `#8B8475`, dim `#5A5550`, accent amber `#E8B557` (cursor/CTA
+> only). **Mood:** a terminal in deep space — dark, pixel type, one amber signal,
+> subtle motion (warp/glitch/pixel-burst) that never out-shouts the content.
 
-Added to Project **FlyRank Backend Internship** custom instructions, so every
-build-week prompt inherits it and the site stays one coherent thing across the
-eight weeks instead of drifting per page.
+In Project **FlyRank Backend Internship**, so every build-week prompt inherits it.
 
 ## Pass / revise — self-check
 
-- **One or two fonts, not a pile** → two (IBM Plex Mono + Inter). ✓
-- **Tight palette with real hex** → four tokens, hex above. ✓
-- **A simple logo/favicon exists** → `favicon.svg`, monogram in the heading font. ✓
-- **A single coherent mood that frames, not competes** → "terminal at rest";
-  accent restricted to one CTA so nothing out-shouts the work. ✓
+- **One or two fonts, not a pile** → one (Geist Pixel Square). ✓
+- **Tight palette with real hex** → 5 core tokens + a small data-accent set, hex above. ✓
+- **A simple logo/favicon exists** → `favicon.svg`, the `m▮` prompt. ✓
+- **A single coherent mood that frames, not competes** → "terminal in deep space";
+  amber restricted to the cursor/CTA so the work stays loudest. ✓ (live on migarci2.dev)

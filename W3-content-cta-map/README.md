@@ -2,88 +2,68 @@
 
 Assignment: *The Through-Line: Map Content & CTAs* (General AI Fluency, Week 3)
 Author: Miguel Garcia Roman
-Builds on the sitemap in [../W1-draw-the-path](../W1-draw-the-path) and the cases in
-[../W2-frame-it-as-cases](../W2-frame-it-as-cases).
+Live: **[migarci2.dev](https://migarci2.dev)** · identity: [../W3-identity-kit](../W3-identity-kit)
 
 ## The one claim (memorable, not a paragraph)
 
-> **Give me an undocumented backend. I'll hand you the small tool that tames it.**
+> **Systems, security and AI agents.**
 
-Everything below ladders up to a single action from Chapter 1:
-**read one repo, then email me.**
+The through-line under it, in one line: **low-level engineering translated into usable
+tools.** Everything on the page ladders up to one action from Chapter 1: **email me.**
 
-## Content map (ordered sections + one named CTA per page)
+## Content map (ordered sections + CTA) — as shipped
 
-Strongest work leads everywhere. Four pages, no more.
+Single page, strongest work leads. Real sections, in order:
 
-### `/` — Home
-1. **Hero** — the claim, plus one *verifiable* proof line above the fold:
-   "Built a working CLI against an app that publishes no API — by reading its
-   Server-Action traffic. It submits; the server returns 303."
-2. **Three cases** — one line each, linking into `/work`. Strongest first
-   (the FlyRank CLI).
-3. **Quiet footer** — GitHub + email.
-   → **CTA: "Read a repo, then email me"** (the accent-green button; the only loud
-   pixel — see [../W3-identity-kit](../W3-identity-kit)).
+1. **Hero** — the claim + one honest sub ("Computer Engineering student building
+   open-source products on C/C++, Linux, reverse engineering, agent automation"), a
+   live **terminal panel** (type `help`), and a `⌘K` command palette.
+   → **CTA: `contact` (mailto)** — the amber primary button. Secondary: `github`.
+2. **Live stats** — real receipts, odometer-counted on scroll: **10** kernel patches
+   upstream · **400+** applicants beat to LFX · **4** shipped OSS projects · **5**
+   competitive-security receipts.
+3. **Work (`#work`)** — the proof. Strongest first, each links to the real repo/thread:
+   **Linux Kernel** (LFX, 10 upstream patches) · **ProofMesh** (AI + formal methods,
+   Lean 4) · **agenctf** (agent infra for CTF) · **webserv** (C++ HTTP/1.1 server).
+   → **CTA: each card → the repo/thread.**
+4. **Game (`#game`)** — a WarpRunner easter egg (+ Konami). Personality, one scroll.
+5. **Signals (`#signals`)** — ICC 2026 (Team Europe winner), ECSC Team Spain 2025,
+   Linux Kernel contributor, Uniswap Hookathon prize, Rektoff Solana bootcamp.
+6. **Blog** — `ten-patches-in`, `agents-that-do-ctf`, `why-i-use-lean-for-real` (+ RSS).
+7. **Contact** — the one action, bare.
+   → **CTA: `contact` (mailto), `github`.**
 
-### `/work` — Cases (the proof)
-1. **Case 1 — CLI for a system with no API** (FlyRank portal). Leads; it's the
-   sharpest evidence.
-2. **Case 2 — BE-01, the smallest honest API.**
-3. **Case 3 — BE-04, swap the store without touching the service.**
-   Each case: problem · what I decided · what came of it (already written in W2).
-   → **CTA: "See the repo"** (per case, → GitHub) then "Email me about this one."
-
-### `/about` — Short
-1. **Who this is for** — a founding/early backend engineer at a small AI company.
-2. **Why I build small** — one paragraph, the no-framework stance.
-   → **CTA: "Email me"** (secondary, text link).
-
-### `/contact` — The one action
-1. **One line + email + GitHub.** No nine-field form.
-   → **CTA: "Email me"** (the primary action, restated plainly).
-
-## The CTA ladder (every rung points at the one action)
+## The CTA ladder (every rung → the one action)
 
 ```
-Home hero  →  "Read a repo, then email me"   (the ask, stated once, up top)
-Case page  →  "See the repo"  →  "Email me about this one"   (proof, then ask)
-About      →  "Email me"      (soft restate)
-Contact    →  "Email me"      (the action, bare)
+Hero      →  contact  (amber primary)   ·  github (secondary)  ·  ⌘K / terminal (the curious)
+Work card →  see the repo / kernel thread
+Signals   →  (proof, no ask — earns the contact)
+Contact   →  contact  (the action, restated bare)
 ```
 
-No rung invents a new destination (no "subscribe," no "book a call," no download).
-Every CTA is the same action at a different level of proof — the reviewer is always
-one click from `email me`, and never asked to do anything else.
+No rung invents a new destination (no newsletter, no "book a call"). The reader is
+always one step from **email**; the terminal/⌘K are play, not detours.
 
-## Gather-list (honest — so build week isn't blocked)
+## Gather-list (honest)
 
-Proof I still need to capture before the site goes live:
+The site ships with **real** content already — the list is what would sharpen it, not
+blockers:
 
-- [ ] **CLI screenshots** — `list`, `show`, and a real `submit` showing the **303**.
-      *(Have the tool; need clean terminal captures — see
-      [../W3-curate-images](../W3-curate-images).)*
-- [ ] **BE-01 curl output** — a 2xx from `/hello` and `/time`. *(Have the code;
-      need the capture.)*
-- [ ] **BE-04 proof** — `docker compose up` + a shot proving data survives a
-      restart (named volume). *(Code done; need the terminal capture.)*
-- [ ] **Live repo links** — public URLs for each case. *(Repo is
-      `github.com/migarci2/FlyRank`; may split the CLI into its own repo so the
-      "read one repo" ask points at exactly one thing.)*
-- [ ] **Headshot** — one real photo for `/about`. *(Not yet taken.)*
-- [ ] **Internship work not finished yet** — Auth (Week 4) and any later capstone
-      become Case 4+ once shipped; leave a placeholder slot in `/work`, don't fake
-      it.
-
-Nothing here blocks structure — the map stands; these are captures and links to
-drop into named slots.
+- [ ] **Per-project proof** — a screenshot or one-line result on each card (the kernel
+      `lore` thread link is there; add a patch count / merge status inline).
+- [ ] **A résumé/CV link** in contact (the stats cite it; link it).
+- [ ] **A live demo** for ProofMesh/agenctf where one exists (else keep the repo link).
+- [ ] **favicon.ico** — the deployed site 404s `/favicon.ico`; add an icon file.
+- [ ] **Internship work** (FlyRank BE-auth, scraper) becomes a project card once it's
+      worth showing publicly; leave a slot, don't pad.
 
 ## Pass / revise — self-check
 
-- **Single memorable claim, not a paragraph** → one line, above. ✓
-- **Every page: ordered sections + a named CTA; strongest work leads** → yes, and
-  Case 1 (the CLI) leads Home and Work. ✓
-- **CTAs ladder up to the one Chapter-1 action** → all rungs resolve to "email me";
-  no competing destinations. ✓
-- **Honest gather-list, build week not blocked** → checkbox list above, incl.
-  unfinished internship work as future cases. ✓
+- **Single memorable claim, not a paragraph** → "Systems, security and AI agents." ✓
+- **Every page: ordered sections + a named CTA; strongest work leads** → yes; Work
+  leads with the Linux Kernel contribution. ✓
+- **CTAs ladder up to the one Chapter-1 action** → all resolve to `contact`; no
+  competing destinations. ✓
+- **Honest gather-list, build not blocked** → above; the site is already live, these
+  are sharpeners. ✓

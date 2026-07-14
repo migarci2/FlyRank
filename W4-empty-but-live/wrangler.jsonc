@@ -1,0 +1,12 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "miguel-portfolio",
+  "account_id": "12369764cb3801bdb9ff6be00a334c18",
+  "compatibility_date": "2026-07-14",
+  "assets": {
+    "directory": "./dist"
+  },
+  "routes": [
+    { "pattern": "migarci2.dev", "custom_domain": true }
+  ]
+}

@@ -1,6 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" role="img" aria-label="mg monogram">
-  <rect width="32" height="32" rx="7" fill="#1F3A5F"/>
-  <text x="16" y="21" text-anchor="middle"
-        font-family="'IBM Plex Mono','SFMono-Regular',ui-monospace,monospace"
-        font-size="15" font-weight="600" fill="#FBFBF9" letter-spacing="-0.5">mg</text>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" role="img" aria-label="migarci2.dev">
+  <rect width="32" height="32" rx="4" fill="#0F0E0C"/>
+  <text x="5" y="21" font-family="'Geist Pixel Square','SFMono-Regular',ui-monospace,monospace"
+        font-size="14" font-weight="700" fill="#F0E8D4" letter-spacing="-0.5">m</text>
+  <rect x="17" y="9" width="9" height="13" fill="#E8B557"/>
