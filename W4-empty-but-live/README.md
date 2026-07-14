@@ -29,15 +29,21 @@ npm run dev       # http://localhost:4321  — near-blank but real
 npm run build     # -> dist/  (static files Cloudflare will serve)
 ```
 
-## Deploy (free, git-push) — Cloudflare Pages
+## Deploy (free) — Cloudflare Pages via wrangler
 
-1. Push this project to a repo (or a subtree of `migarci2/FlyRank`).
-2. Cloudflare dashboard → **Workers & Pages → Create → Pages → Connect to Git**.
-3. Framework preset **Astro** → build `npm run build`, output `dist`.
-4. Deploy → you get `https://<project>.pages.dev`. Every push redeploys.
+```bash
+npm run build                                               # -> dist/
+npx wrangler login                                          # one-time OAuth
+npx wrangler pages deploy dist --project-name=miguel-portfolio
+# -> https://miguel-portfolio.pages.dev  (creates the project on first deploy)
+```
 
-*(Netlify / GitHub Pages / Vercel would all work the same way; Cloudflare Pages is
-the one I chose — free static hosting, no server.)*
+Every re-run redeploys. `wrangler` is already a devDependency.
+
+*(Note: Cloudflare's new unified `cf` CLI is in early technical preview and its
+static/Pages deploy isn't ready yet — it forces an undocumented experimental
+`cloudflare.config.ts`. `wrangler pages deploy` is the mature path today. Netlify /
+GitHub Pages / Vercel would work the same way.)*
 
 ## ⬜ The part only I can do (not faked)
 
