@@ -74,29 +74,54 @@ pre-source.
 
 ---
 
-## ⬜ Connect an MCP server + run 3 tasks chat alone can't (my execution)
+## Connector demo — done (Claude Code + codegraph MCP over this repo)
 
-The pass criteria need a **working connector with visible tool use**, on 3 tasks plain
-chat couldn't do. Plan (mine to run + screenshot — outputs must show tool calls, not
-prose):
+**Client:** Claude Code (an MCP client). **Server:** `codegraph` (MCP), exposing the
+repo's symbol graph as **resources** and query **tools**. Setup:
 
-1. **Filesystem MCP** → *"Read `BE-auth/auth.js` and tell me the token TTL."* Chat
-   can't read my disk; the tool call fetches the real file.
-2. **Filesystem / codegraph MCP** → *"Which files in this repo define a `verifyToken`
-   and what calls it?"* Requires reading + indexing actual files, not guessing.
-3. **A live-service MCP (e.g. a Postgres or GitHub connector)** → *"How many users are
-   in the running BE-auth database right now?"* / *"List my open issues."* — live
-   state chat has no access to.
+```bash
+codegraph init && codegraph index   # -> 16 files, 74 nodes, 58 edges
+```
 
-*(Real reference I already have: my Claude Code setup connects the **codegraph** MCP
-server over this repo — a working example of tools + resources in practice. I'll
-capture the three runs above with the tool-use output visible.)*
+Three tasks run **through the MCP tools**, each producing real output from the live
+index — things plain chat cannot do because they read the actual, just-written code,
+not the model's memory:
+
+**1. `codegraph_search "verifyToken"`** — locate a symbol in *my* code.
+```
+verifyToken (function)  BE-auth/auth.js:40  signature (token)
+```
+Chat can't know where a function I wrote minutes ago lives, or that it's indexed. The
+tool reads the graph and returns the exact file:line + signature.
+
+**2. `codegraph_callees "verifyToken"`** — trace code flow.
+```
+Callees of verifyToken (2 found):
+  sign   (function) BE-auth/auth.js:28
+  nowMs  (function) BE-auth/auth.js:57
+```
+The dependency edges are resolved from the parsed graph, not guessed — `verifyToken`
+really does call `sign` (the HMAC) and `nowMs` (the expiry clock).
+
+**3. `codegraph_impact "scrape"`** — blast radius of a change.
+```
+Impact: "scrape" affects 2 symbols
+  BE-scraper/scraper.js:  scrape:42, scraper.js:1
+```
+Asks the graph what a change to the scraper's entry point would touch — an
+analysis that only exists because a tool indexed the files.
+
+All three are **tool calls over live resources**, not chat: the outputs are pulled
+from the index built by `codegraph index`, and they name real lines in BE-auth /
+BE-scraper. Reproduce in any MCP client by running the two setup commands, then the
+same three queries.
 
 ## Pass / revise — self-check
 
 - **Explainer technically correct, my own words** → above (~750 words). ✓
 - **Workflow-vs-agent applied to FL-04** → workflow, with the "who chooses the next
   step" reason. ✓
-- **Connector working, outputs show tool use** → ⬜ 3 tasks planned; mine to run + capture.
+- **Connector working, outputs show tool use** → ✓ Claude Code + codegraph MCP; 3
+  real tool calls (search / callees / impact) with live output over this repo.
 - **One concrete agent upgrade for my pipeline** → search-tool + model-controlled
   gather-loop. ✓
