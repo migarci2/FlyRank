@@ -202,9 +202,25 @@ whole lesson: the ceiling wasn't the AI, it was my prompt.
 - [x] Database created automatically if missing
 - [x] `tasks` table created automatically if missing
 - [x] Three examples inserted only on the first run
-- [x] CRUD operations use SQL queries (prepared statements)
-- [x] Unknown ids return 404, invalid requests return 400
-- [x] Public repo with README and database screenshot
+- [x] All CRUD operations use SQL with **parameterised** placeholders (no value is
+      ever concatenated into a statement)
+- [x] Status codes carried over from A1: `200` / `201` / `204`, `400` invalid body,
+      `404` unknown id, each error with a JSON `error` message
+- [x] Public repo, README with why-SQLite, the run command, an example SQL query,
+      and a DB Browser screenshot
+- [x] Persistence shown **two ways**: through `curl` (`proof.txt`) and by opening
+      `tasks.db` in DB Browser (`db-browser.png`)
+- [x] Runs on a clean clone — verified with `git clone` into a temp dir; the
+      database creates itself
+
+**Stretch:** ✅ the API didn't change (same tests pass, see below) · ✅ index on the
+searched column · ✅ transactional seed · ✅ Stage 6 AI rematch.
+
+**One honest note on the commits.** The brief asks for one commit per stage. Stages
+0–3 landed in a single commit (`f7a9595`) because I built and verified them in one
+sitting; stages 4, 5, the extras and stage 6 are separate commits after that, so
+`git log` has six for this assignment. I'd rather say that than backdate a history
+I didn't work in.
 
 ## Extras and stretch goals
 
