@@ -1,2 +1,4 @@
 tasks.db
 test-tasks.db
+ai-version/tasks.db
+codex*.log
