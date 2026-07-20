@@ -85,6 +85,32 @@ Full transcript: [`proof.txt`](./proof.txt). It shows, in one uninterrupted run:
 `test.js` covers the same ground automatically: seeding, every CRUD verb, both
 error codes, and delete-twice → 404.
 
+## Stage 4 — SQL by hand
+
+Transcript: [`sql-by-hand.txt`](./sql-by-hand.txt). The server stays **running** the
+whole time; I open `tasks.db` next to it and edit the rows directly.
+
+```sql
+UPDATE tasks SET done = 1;              -- mark every task completed
+DELETE FROM tasks WHERE done = 1;       -- and then delete all completed ones
+INSERT INTO tasks (title, done) VALUES ('added by hand in SQL', 0);
+```
+
+Then, with no restart and no sync step, the API answers with the hand-written row:
+
+```
+$ curl -s localhost:3000/tasks
+[{"id":1,"title":"added by hand in SQL","done":false}]
+```
+
+**One sentence:** `UPDATE tasks SET done = 1;` returned nothing at all and still
+changed every row — and the API served that change on the very next request,
+because the shell and the server are not two copies of the data, they are two
+programs opening the same file.
+
+The full five-query set from the brief (`SELECT *`, `WHERE done = 1`, `COUNT(*)`,
+`UPDATE`, `DELETE`) is in the transcript with its real output.
+
 ## Requirements checklist
 
 - [x] Same CRUD endpoints as Assignment 1
