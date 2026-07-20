@@ -47,11 +47,21 @@ const call = async (method, path, body) => {
   assert.equal((await call("GET", "/tasks/9999")).status, 404);
   assert.deepEqual((await call("GET", "/tasks/9999")).body, { error: "Task not found" });
 
+  // extras: filter / search / sort / stats, all computed in SQL
+  assert.deepEqual(
+    (await call("GET", "/tasks?done=true")).body.map((t) => t.id),
+    [1, id]
+  );
+  assert.equal((await call("GET", "/tasks?search=SQLite")).body.length, 1);
+  assert.equal((await call("GET", "/tasks?search=nothing-matches")).body.length, 0);
+  assert.equal((await call("GET", "/tasks?sort=title")).body[0].title, "Connect the CRUD to SQLite");
+  assert.deepEqual((await call("GET", "/stats")).body, { total: 4, done: 2, pending: 2 });
+
   assert.equal((await call("DELETE", `/tasks/${id}`)).status, 204);
   assert.equal((await call("DELETE", `/tasks/${id}`)).status, 404);
   assert.equal((await call("GET", "/tasks")).body.length, 3, "back to the 3 examples");
 
   server.close();
   fs.rmSync(DB, { force: true });
-  console.log("ok — 15 assertions");
+  console.log("ok — 20 assertions");
 })();

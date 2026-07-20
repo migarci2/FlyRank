@@ -123,10 +123,35 @@ The full five-query set from the brief (`SELECT *`, `WHERE done = 1`, `COUNT(*)`
 - [x] Unknown ids return 404, invalid requests return 400
 - [x] Public repo with README and database screenshot
 
-**Bonus stages skipped** (`?done=` filter, alphabetical sort, `GET /stats`,
-`created_at`/`updated_at`): none of them are in the requirements list, and each one
-adds surface to a 90-line file. `WHERE done = ?` and `COUNT(*)` are one line each
-if a later assignment asks for them.
+## Extras and stretch goals
+
+| Extra | How | Where |
+|-------|-----|-------|
+| Search | `GET /tasks?search=milk` → `WHERE title LIKE ?` | SQL, not a JS loop |
+| Filter | `GET /tasks?done=true` → `WHERE done = ?` | SQL |
+| Sort | `GET /tasks?sort=title` → `ORDER BY title` | SQL |
+| Stats | `GET /stats` → `COUNT(*) FILTER (WHERE done = 1)` | SQL |
+| Index | `CREATE INDEX tasks_title ON tasks (title)` | on the column search/sort scan |
+| Transaction | seeding wrapped in `BEGIN` / `COMMIT` / `ROLLBACK` | startup |
+
+**What an index is for:** without one, `WHERE title LIKE ?` reads every row; the
+index is a pre-sorted copy of that column so SQLite can jump instead of scan. On
+three rows it changes nothing — on three million it's the whole ballgame.
+
+**Why the transaction matters:** the three examples are one decision, not three.
+If the second insert failed, a plain loop would leave a table with one row in it —
+which is not empty, so the seed would never run again and the database would be
+permanently half-built. `BEGIN`/`COMMIT` makes it all-or-nothing.
+
+**The API didn't change:** `test.js` was written against the in-memory contract and
+still passes untouched against SQLite (the only new assertions are for the extras
+above). That's the proof storage is "just an implementation detail" — if swapping
+the storage layer had leaked into the API, those assertions would be the first
+thing to break.
+
+**Skipped:** `created_at` / `updated_at`. Adding columns to a live table is exactly
+the pain that migrations exist to manage, and this repo has no migration story yet;
+it's a Week-N assignment, not a stealth one here.
 
 ## Note on `tasks.db`
 
