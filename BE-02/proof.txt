@@ -1,0 +1,29 @@
+$ rm -f tasks.db                        # start from nothing
+$ node server.js &
+listening on http://localhost:3000
+$ curl -s localhost:3000/tasks          # db, table and 3 examples created automatically
+[{"id":1,"title":"Read the assignment","done":true},{"id":2,"title":"Connect the CRUD to SQLite","done":false},{"id":3,"title":"Prove the data survives a restart","done":false}]
+$ curl -s -XPOST localhost:3000/tasks -d '{"title":"survive the restart"}'
+{"id":4,"title":"survive the restart","done":false}
+$ curl -s -XPUT localhost:3000/tasks/2 -d '{"title":"Connect the CRUD to SQLite","done":true}'
+{"id":2,"title":"Connect the CRUD to SQLite","done":true}
+$ curl -s -XDELETE -o /dev/null -w "%{http_code}\n" localhost:3000/tasks/3
+204
+$ curl -s -o /dev/null -w "%{http_code}\n" localhost:3000/tasks/9999    # unknown id
+404
+$ curl -s -XPOST localhost:3000/tasks -d "{}"                           # invalid body
+{"error":"title is required"}
+$ kill %1                                # ---------- SERVER DOWN ----------
+$ node server.js &                      # ---------- SERVER BACK UP ----------
+listening on http://localhost:3000
+$ curl -s localhost:3000/tasks          # data still there, examples NOT re-seeded
+[{"id":1,"title":"Read the assignment","done":true},{"id":2,"title":"Connect the CRUD to SQLite","done":true},{"id":4,"title":"survive the restart","done":false}]
+$ sqlite3 tasks.db ".schema tasks" "select * from tasks;"
+CREATE TABLE tasks (
+  id    INTEGER PRIMARY KEY,
+  title TEXT    NOT NULL,
+  done  INTEGER NOT NULL DEFAULT 0
+);
+1|Read the assignment|1
+2|Connect the CRUD to SQLite|1
+4|survive the restart|0
