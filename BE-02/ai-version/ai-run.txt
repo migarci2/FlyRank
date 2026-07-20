@@ -1,0 +1,20 @@
+--- fresh boot, its own seed titles
+[{"id":1,"title":"Buy groceries","done":false},{"id":2,"title":"Walk the dog","done":false},{"id":3,"title":"Read a book","done":false}]
+--- POST
+{"id":4,"title":"survive the restart","done":false}
+--- PUT without done   (mine returns 200, same as A1)
+{"error":"Done must be a boolean"} <- 400
+--- PUT with done
+{"id":2,"title":"renamed","done":true}
+--- POST malformed json
+{"error":"Invalid JSON"} <- 400
+--- POST empty body
+{"error":"Invalid JSON"} <- 400
+--- DELETE
+204
+--- unknown id
+{"error":"Task not found"}
+--- unknown path
+{"error":"Not found"}
+--- restart: data survives, seed does not repeat
+[{"id":1,"title":"Buy groceries","done":false},{"id":2,"title":"renamed","done":true},{"id":4,"title":"survive the restart","done":false}]

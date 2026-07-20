@@ -103,6 +103,10 @@ $ curl -s localhost:3000/tasks
 [{"id":1,"title":"added by hand in SQL","done":false}]
 ```
 
+The same file, same rows, seen in DB Browser for SQLite instead of through the API:
+
+![tasks.db in DB Browser for SQLite](./db-browser.png)
+
 **One sentence:** `UPDATE tasks SET done = 1;` returned nothing at all and still
 changed every row — and the API served that change on the very next request,
 because the shell and the server are not two copies of the data, they are two
@@ -110,6 +114,85 @@ programs opening the same file.
 
 The full five-query set from the brief (`SELECT *`, `WHERE done = 1`, `COUNT(*)`,
 `UPDATE`, `DELETE`) is in the transcript with its real output.
+
+## AI vs me (Stage 6 — the rematch)
+
+Stages 0–5 were built by hand. Then I hired the fastest junior developer on earth
+to do the same migration and reviewed its work. The AI is **GPT-5.5 via the Codex
+CLI**; its output is quarantined in [`ai-version/`](./ai-version) and nothing in it
+touches my submission.
+
+### My prompt
+
+Written before looking at the AI's answer, without copying the brief:
+[`ai-version/prompt.txt`](./ai-version/prompt.txt). It pins the lane, the table
+shape, "create if missing", "seed only when empty", all five endpoints with their
+status codes, real JSON booleans, and parameterised placeholders.
+
+Its run: [`ai-version/ai-run.txt`](./ai-version/ai-run.txt) · the diff against my
+version: [`ai-version/diff.txt`](./ai-version/diff.txt).
+
+### It started on the first try
+
+`node server.js` created `tasks.db`, seeded three tasks, survived a restart without
+re-seeding, and passed my Stage 2 and Stage 3 checkpoints. Parameterised queries
+everywhere. On the headline requirement it is correct.
+
+### Three concrete differences
+
+**1. It quietly changed the API — the one thing the assignment forbids.**
+
+```
+PUT /tasks/2  {"title":"renamed"}
+  mine → 200 {"id":2,"title":"renamed","done":false}
+  AI   → 400 {"error":"Done must be a boolean"}
+```
+
+`POST` without `done` it accepts; `PUT` without `done` it rejects. Same field, same
+optionality, two different answers, and the strict one breaks a request A1 used to
+serve. **This is my prompt's fault**: I wrote "400 on an invalid body" and never
+said what invalid means, so the AI decided — and decided inconsistently. The
+requirement it broke ("the API behaves exactly the same") was the entire point of
+the assignment, and it broke it while looking completely reasonable.
+
+**2. Two things it did better than me.**
+
+- `done INTEGER NOT NULL DEFAULT 0 CHECK (done IN (0, 1))` — it pushed the boolean
+  invariant into the schema, so the database refuses a `done = 7` even if my code
+  is the thing that's wrong. I had left that promise in JavaScript only. I'd take
+  this one.
+- It separates `{"error":"Not found"}` for an unknown *path* from
+  `{"error":"Task not found"}` for an unknown *id*. Mine answers "Task not found"
+  for `/nope`, which is a small lie.
+
+It also caps the request body at 1 MB — defensive, unasked for, correct.
+
+**3. What it got wrong or ignored.** It leaks internal exception text to the client
+(`error.message` straight from the JSON parser). It seeds in a bare loop, no
+transaction, so a failure mid-seed leaves a permanently half-built table. No index.
+And it spends two statements (`INSERT` then `SELECT` by `lastInsertRowid`) where
+`INSERT ... RETURNING *` does it in one.
+
+None of those were in my prompt. **The AI's output is exactly as good as the
+specification** — it filled every gap I left, silently, and I could only see which
+gaps existed because I'd built the thing myself first.
+
+### The rematch
+
+I rewrote the prompt with what the review taught me
+([`ai-version/prompt-v2.txt`](./ai-version/prompt-v2.txt)): PUT with no `done` is
+valid and defaults to false, POST and PUT must agree, seed in a transaction, index
+on `title`, `RETURNING` instead of a second `SELECT`, never send an internal
+exception to the client.
+
+Run: [`ai-version/ai-run-v2.txt`](./ai-version/ai-run-v2.txt). `PUT {"title":"renamed"}`
+now returns `200 {"done":false}`, the seed runs inside `BEGIN`/`COMMIT`/`ROLLBACK`,
+there's an index on `title`, `INSERT`/`UPDATE` use `RETURNING`, and the parser error
+became a fixed `{"error":"Invalid request body"}` instead of the exception text.
+
+**One sentence on what changed:** same model, same task — five sentences of
+specification turned every one of those defects into correct code, which is the
+whole lesson: the ceiling wasn't the AI, it was my prompt.
 
 ## Requirements checklist
 

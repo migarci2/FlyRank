@@ -1,0 +1,251 @@
+diff --git a/server.js b/ai-version/server.js
+index 1a367e9..c60a369 100644
+--- a/server.js
++++ b/ai-version/server.js
+@@ -1,128 +1,136 @@
+-const http = require("http");
+-const { DatabaseSync } = require("node:sqlite");
+-
+-// ponytail: node:sqlite is stdlib on Node 22+, so no better-sqlite3 dependency.
+-const db = new DatabaseSync(process.env.DB_FILE || "tasks.db");
+-
+-db.exec(`CREATE TABLE IF NOT EXISTS tasks (
+-  id    INTEGER PRIMARY KEY,
+-  title TEXT    NOT NULL,
+-  done  INTEGER NOT NULL DEFAULT 0
+-)`);
+-
+-// Search and filter run in SQL, so the column they scan gets an index.
+-db.exec("CREATE INDEX IF NOT EXISTS tasks_title ON tasks (title)");
+-
+-// Seed only on a virgin table, so restarts never duplicate the examples.
+-// One transaction: three examples or none, never a half-seeded table.
+-if (db.prepare("SELECT COUNT(*) AS n FROM tasks").get().n === 0) {
+-  const insert = db.prepare("INSERT INTO tasks (title, done) VALUES (?, ?)");
+-  db.exec("BEGIN");
+-  try {
+-    insert.run("Read the assignment", 1);
+-    insert.run("Connect the CRUD to SQLite", 0);
+-    insert.run("Prove the data survives a restart", 0);
+-    db.exec("COMMIT");
+-  } catch (err) {
+-    db.exec("ROLLBACK");
+-    throw err;
++const http = require('node:http');
++const { DatabaseSync } = require('node:sqlite');
++
++const db = new DatabaseSync('tasks.db');
++
++db.exec(`
++  CREATE TABLE IF NOT EXISTS tasks (
++    id INTEGER PRIMARY KEY,
++    title TEXT NOT NULL,
++    done INTEGER NOT NULL DEFAULT 0 CHECK (done IN (0, 1))
++  )
++`);
++
++const seed = db.prepare('INSERT INTO tasks (title) VALUES (?)');
++if (db.prepare('SELECT COUNT(*) AS count FROM tasks').get().count === 0) {
++  for (const title of ['Buy groceries', 'Walk the dog', 'Read a book']) {
++    seed.run(title);
+   }
+ }
+ 
+-// SQLite has no boolean, so done is stored 0/1 and re-typed on the way out.
+-const row = (r) => r && { id: r.id, title: r.title, done: !!r.done };
+-
+-const q = {
+-  list: db.prepare("SELECT * FROM tasks ORDER BY id"),
+-  // Extras: filtering, searching and sorting all happen in SQL, never in a JS loop.
+-  filtered: (where, sort) =>
+-    db.prepare(`SELECT * FROM tasks ${where} ORDER BY ${sort}`),
+-  stats: db.prepare(
+-    "SELECT COUNT(*) AS total, COUNT(*) FILTER (WHERE done = 1) AS done FROM tasks"
+-  ),
+-  get: db.prepare("SELECT * FROM tasks WHERE id = ?"),
+-  insert: db.prepare("INSERT INTO tasks (title, done) VALUES (?, ?) RETURNING *"),
+-  update: db.prepare("UPDATE tasks SET title = ?, done = ? WHERE id = ? RETURNING *"),
+-  del: db.prepare("DELETE FROM tasks WHERE id = ?"),
+-};
+-
+-const send = (res, code, body) => {
+-  res.writeHead(code, { "Content-Type": "application/json" });
+-  res.end(JSON.stringify(body));
+-};
+-
+-async function handler(req, res) {
+-  const url = new URL(req.url, "http://localhost");
+-  const path = url.pathname;
+-  const m = path.match(/^\/tasks\/(\d+)$/);
+-  const id = m && Number(m[1]);
+-  const notFound = { error: "Task not found" };
+-
+-  if (req.method === "GET" && path === "/stats") {
+-    const s = q.stats.get();
+-    return send(res, 200, { total: s.total, done: s.done, pending: s.total - s.done });
+-  }
++const allTasks = db.prepare('SELECT id, title, done FROM tasks ORDER BY id');
++const taskById = db.prepare('SELECT id, title, done FROM tasks WHERE id = ?');
++const createTask = db.prepare('INSERT INTO tasks (title, done) VALUES (?, ?)');
++const updateTask = db.prepare('UPDATE tasks SET title = ?, done = ? WHERE id = ?');
++const deleteTask = db.prepare('DELETE FROM tasks WHERE id = ?');
+ 
+-  if (req.method === "GET" && path === "/tasks") {
+-    const { search, done, sort } = Object.fromEntries(url.searchParams);
+-    const where = [];
+-    const args = [];
+-    if (search) (where.push("title LIKE ?"), args.push(`%${search}%`));
+-    if (done === "true" || done === "false") (where.push("done = ?"), args.push(done === "true" ? 1 : 0));
+-    // Only two sorts are reachable, so nothing user-supplied ever lands in the SQL.
+-    const clause = where.length ? `WHERE ${where.join(" AND ")}` : "";
+-    const rows = q.filtered(clause, sort === "title" ? "title" : "id").all(...args);
+-    return send(res, 200, rows.map(row));
+-  }
++function asJsonTask(task) {
++  return task && { ...task, done: task.done === 1 };
++}
+ 
+-  if (req.method === "GET" && id) {
+-    const task = row(q.get.get(id));
+-    return task ? send(res, 200, task) : send(res, 404, notFound);
+-  }
++function sendJson(response, status, value) {
++  response.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8' });
++  response.end(JSON.stringify(value));
++}
+ 
+-  if (req.method === "POST" && path === "/tasks") {
+-    const body = await readJson(req);
+-    if (!body || typeof body.title !== "string" || !body.title.trim())
+-      return send(res, 400, { error: "title is required" });
+-    return send(res, 201, row(q.insert.get(body.title.trim(), body.done ? 1 : 0)));
+-  }
++async function readJson(request) {
++  const chunks = [];
++  let size = 0;
+ 
+-  if (req.method === "PUT" && id) {
+-    const body = await readJson(req);
+-    if (!body || typeof body.title !== "string" || !body.title.trim())
+-      return send(res, 400, { error: "title is required" });
+-    const task = row(q.update.get(body.title.trim(), body.done ? 1 : 0, id));
+-    return task ? send(res, 200, task) : send(res, 404, notFound);
++  for await (const chunk of request) {
++    size += chunk.length;
++    if (size > 1_000_000) throw new Error('Request body too large');
++    chunks.push(chunk);
+   }
+ 
+-  if (req.method === "DELETE" && id) {
+-    return q.del.run(id).changes ? send(res, 204, null) : send(res, 404, notFound);
++  try {
++    return JSON.parse(Buffer.concat(chunks).toString('utf8'));
++  } catch {
++    throw new Error('Invalid JSON');
+   }
++}
+ 
+-  send(res, 404, notFound);
++function validTitle(title) {
++  return typeof title === 'string' && title.trim().length > 0;
+ }
+ 
+-function readJson(req) {
+-  return new Promise((resolve) => {
+-    let data = "";
+-    req.on("data", (c) => (data += c));
+-    req.on("end", () => {
++const server = http.createServer(async (request, response) => {
++  try {
++    const pathname = new URL(request.url, 'http://localhost').pathname;
++    const match = pathname.match(/^\/tasks\/(\d+)$/);
++
++    if (request.method === 'GET' && pathname === '/tasks') {
++      return sendJson(response, 200, allTasks.all().map(asJsonTask));
++    }
++
++    if (request.method === 'POST' && pathname === '/tasks') {
++      let body;
+       try {
+-        resolve(data ? JSON.parse(data) : null);
+-      } catch {
+-        resolve(null); // malformed JSON is just a missing body -> 400 above
++        body = await readJson(request);
++      } catch (error) {
++        return sendJson(response, 400, { error: error.message });
+       }
+-    });
+-  });
+-}
+ 
+-const server = http.createServer((req, res) =>
+-  handler(req, res).catch(() => send(res, 500, { error: "internal error" }))
+-);
++      if (!body || typeof body !== 'object' || Array.isArray(body) || !validTitle(body.title)) {
++        return sendJson(response, 400, { error: 'Title is required' });
++      }
++      if ('done' in body && typeof body.done !== 'boolean') {
++        return sendJson(response, 400, { error: 'Done must be a boolean' });
++      }
+ 
+-if (require.main === module) {
+-  const port = process.env.PORT || 3000;
+-  server.listen(port, () => console.log(`listening on http://localhost:${port}`));
+-}
++      const result = createTask.run(body.title, body.done ? 1 : 0);
++      return sendJson(response, 201, asJsonTask(taskById.get(result.lastInsertRowid)));
++    }
++
++    if (match) {
++      const id = Number(match[1]);
++      if (!Number.isSafeInteger(id)) {
++        return sendJson(response, 404, { error: 'Task not found' });
++      }
++
++      if (request.method === 'GET') {
++        const task = taskById.get(id);
++        return task
++          ? sendJson(response, 200, asJsonTask(task))
++          : sendJson(response, 404, { error: 'Task not found' });
++      }
++
++      if (request.method === 'PUT') {
++        let body;
++        try {
++          body = await readJson(request);
++        } catch (error) {
++          return sendJson(response, 400, { error: error.message });
++        }
++
++        if (!body || typeof body !== 'object' || Array.isArray(body) || !validTitle(body.title)) {
++          return sendJson(response, 400, { error: 'Title is required' });
++        }
++        if (typeof body.done !== 'boolean') {
++          return sendJson(response, 400, { error: 'Done must be a boolean' });
++        }
++        if (updateTask.run(body.title, body.done ? 1 : 0, id).changes === 0) {
++          return sendJson(response, 404, { error: 'Task not found' });
++        }
++
++        return sendJson(response, 200, asJsonTask(taskById.get(id)));
++      }
++
++      if (request.method === 'DELETE') {
++        if (deleteTask.run(id).changes === 0) {
++          return sendJson(response, 404, { error: 'Task not found' });
++        }
++        response.writeHead(204);
++        return response.end();
++      }
++    }
++
++    return sendJson(response, 404, { error: 'Not found' });
++  } catch (error) {
++    console.error(error);
++    return sendJson(response, 500, { error: 'Internal server error' });
++  }
++});
+ 
+-module.exports = { server };
++const port = Number(process.env.PORT) || 3000;
++server.listen(port, () => console.log(`Server listening on port ${port}`));

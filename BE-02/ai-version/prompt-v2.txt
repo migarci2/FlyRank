@@ -1,0 +1,40 @@
+Write a single-file Node.js HTTP server (no Express, Node standard library only)
+that exposes a tasks CRUD API backed by SQLite in a file called tasks.db.
+
+Lane and library: Node.js, better-sqlite3 or node:sqlite, your call. No ORM.
+
+Table `tasks`: id (integer primary key, assigned by the database), title (text),
+done (boolean stored as 0/1). Create the database file and the table if they do
+not exist. Seed exactly three example tasks, but only when the table is empty, so
+restarting the server never duplicates them.
+
+Endpoints, JSON in and out:
+  GET    /tasks       -> 200, array of every task
+  GET    /tasks/{id}  -> 200 one task, or 404 {"error":"Task not found"}
+  POST   /tasks       -> 201 the created task; 400 {"error": ...} if title is
+                         missing or blank. The database assigns the id; done
+                         defaults to false.
+  PUT    /tasks/{id}  -> 200 the updated task; 400 on an invalid body;
+                         404 on an unknown id
+  DELETE /tasks/{id}  -> 204 with an empty body; 404 on an unknown id
+
+Booleans must come back as real JSON true/false, not 0/1.
+
+Every SQL statement must use parameterised placeholders. Never concatenate a
+value from the request into a SQL string.
+
+Output only the server file. No README, no tests, no commentary.
+
+Additions after reviewing your first attempt:
+
+- PUT with a valid title and no `done` field must succeed with 200 and treat
+  `done` as false. Do not invent stricter validation than this specification
+  gives you: an absent optional field is not an invalid body. POST and PUT must
+  agree on what a valid body is.
+- Wrap the three seed inserts in a single transaction, so the table is never
+  left half-seeded.
+- Create an index on `title`.
+- Return the created and updated row using SQL's RETURNING clause, in the same
+  statement as the INSERT/UPDATE, rather than running a second SELECT.
+- Never send an internal exception message to the client. Client-facing errors
+  are fixed strings chosen by you.
