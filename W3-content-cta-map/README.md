@@ -3,67 +3,82 @@
 Assignment: *The Through-Line: Map Content & CTAs* (General AI Fluency, Week 3)
 Author: Miguel Garcia Roman
 Live: **[migarci2.dev](https://migarci2.dev)** · identity: [../W3-identity-kit](../W3-identity-kit)
+· captures: [../W3-curate-images/captures](../W3-curate-images/captures)
 
 ## The one claim (memorable, not a paragraph)
 
-> **Systems, security and AI agents.**
+> **systems. security. intelligence.**
+> *I build close to the machine.*
 
-The through-line under it, in one line: **low-level engineering translated into usable
-tools.** Everything on the page ladders up to one action from Chapter 1: **email me.**
+That's the hero, verbatim. The through-line under it: **low-level engineering
+translated into usable tools.** Everything on the page ladders up to one action from
+Chapter 1: **email me.**
 
 ## Content map (ordered sections + CTA) — as shipped
 
-Single page, strongest work leads. Real sections, in order:
+One page, three moves: claim → proof → ask. The nav is three words (`work`, `notes`,
+`hello`) and one of them is already the CTA.
 
-1. **Hero** — the claim + one honest sub ("Computer Engineering student building
-   open-source products on C/C++, Linux, reverse engineering, agent automation"), a
-   live **terminal panel** (type `help`), and a `⌘K` command palette.
-   → **CTA: `contact` (mailto)** — the amber primary button. Secondary: `github`.
-2. **Live stats** — real receipts, odometer-counted on scroll: **10** kernel patches
-   upstream · **400+** applicants beat to LFX · **4** shipped OSS projects · **5**
-   competitive-security receipts.
-3. **Work (`#work`)** — the proof. Strongest first, each links to the real repo/thread:
-   **Linux Kernel** (LFX, 10 upstream patches) · **ProofMesh** (AI + formal methods,
-   Lean 4) · **agenctf** (agent infra for CTF) · **webserv** (C++ HTTP/1.1 server).
-   → **CTA: each card → the repo/thread.**
-4. **Game (`#game`)** — a WarpRunner easter egg (+ Konami). Personality, one scroll.
-5. **Signals (`#signals`)** — ICC 2026 (Team Europe winner), ECSC Team Spain 2025,
-   Linux Kernel contributor, Uniswap Hookathon prize, Rektoff Solana bootcamp.
-6. **Blog** — `ten-patches-in`, `agents-that-do-ctf`, `why-i-use-lean-for-real` (+ RSS).
-7. **Contact** — the one action, bare.
-   → **CTA: `contact` (mailto), `github`.**
+1. **Hero** — `MIGUEL GARCÍA ROMÁN · SPAIN`, the three-word claim set huge in the
+   pixel face, the one-line sub, a painterly nebula held far back at low contrast.
+   → **CTA: `scroll ↓` (amber) → `#work`.** Nav `hello` (mailto) is the standing ask.
+2. **Selected work (`#work`)** — the proof, strongest first, one project per screen,
+   each an outbound link. **01 Linux Kernel** — "Ten patches, upstream." (C · Linux ·
+   LFX mentorship) → the real `lore.kernel.org` thread. **02 ProofMesh** —
+   "Mathematics, made collaborative." (Lean 4 · AI · open source). **03 agenctf** —
+   "Agents for real security work." (Python · security · local first).
+   → **CTA: each card `↗` → the repo / the kernel thread.**
+3. **Signal / proof** — three lines, no prose: **10 patches. Team Europe. Team Spain.**
+   → **CTA: `view the work ↗` → GitHub.**
+4. **Contact** — kicker `NEXT SIGNAL`, then "Let's build something real." The palette
+   **inverts here** (dark type on `--paper`): the page goes bright exactly where it
+   asks. Three bare links, nothing else on screen.
+   → **CTA: `email` (mailto, primary) · `github` · `linkedin`.**
+
+Off the main page: **`notes` → /blog** (`ten-patches-in`, `agents-that-do-ctf`,
+`why-i-use-lean-for-real`, plus RSS).
 
 ## The CTA ladder (every rung → the one action)
 
 ```
-Hero      →  contact  (amber primary)   ·  github (secondary)  ·  ⌘K / terminal (the curious)
-Work card →  see the repo / kernel thread
-Signals   →  (proof, no ask — earns the contact)
-Contact   →  contact  (the action, restated bare)
+Hero            →  scroll ↓  (into the proof)   ·  nav: hello (mailto), standing
+Work 01/02/03   →  the repo / the kernel thread  ↗
+Signal          →  view the work ↗   (proof, no ask — it earns the contact)
+Contact         →  email  (the action, restated bare)  ·  github · linkedin
 ```
 
-No rung invents a new destination (no newsletter, no "book a call"). The reader is
-always one step from **email**; the terminal/⌘K are play, not detours.
+No rung invents a new destination: no newsletter, no "book a call", no contact form.
+Every outbound link is either the work itself or the mailbox. `github` and `linkedin`
+in the footer are the only secondary exits, and both are more proof.
 
-## Gather-list (honest)
+## Gather-list (honest — sharpeners, not blockers)
 
-The site ships with **real** content already — the list is what would sharpen it, not
-blockers:
+Checked against production on 2026-07-20:
 
-- [ ] **Per-project proof** — a screenshot or one-line result on each card (the kernel
-      `lore` thread link is there; add a patch count / merge status inline).
-- [ ] **A résumé/CV link** in contact (the stats cite it; link it).
+- [ ] **`/blog` still runs the previous shell** — old nav (`work · game · blog ·
+      contact`) and the old `⌘K` affordance, which contradicts the three-word nav on
+      the new home. Port it or drop `notes` from the nav until it's ported. **Highest
+      value item on this list.**
+- [ ] **`/favicon.ico` still 404s.** `/icon.svg` is served and correct, but older
+      crawlers and some feed readers ask for `.ico`. One file.
+- [ ] **Per-project proof on the cards** — 01 links to a `lore` search; a merge count
+      or a one-line result inline would land it without a click.
+- [ ] **A CV link in contact** — the signal section cites the record, nothing links it.
 - [ ] **A live demo** for ProofMesh/agenctf where one exists (else keep the repo link).
-- [ ] **favicon.ico** — the deployed site 404s `/favicon.ico`; add an icon file.
-- [ ] **Internship work** (FlyRank BE-auth, scraper) becomes a project card once it's
-      worth showing publicly; leave a slot, don't pad.
+- [ ] **Internship work** (FlyRank BE-auth, scraper) becomes a fourth card only when
+      it's worth showing publicly. Leave the slot, don't pad.
 
 ## Pass / revise — self-check
 
-- **Single memorable claim, not a paragraph** → "Systems, security and AI agents." ✓
-- **Every page: ordered sections + a named CTA; strongest work leads** → yes; Work
-  leads with the Linux Kernel contribution. ✓
-- **CTAs ladder up to the one Chapter-1 action** → all resolve to `contact`; no
-  competing destinations. ✓
-- **Honest gather-list, build not blocked** → above; the site is already live, these
-  are sharpeners. ✓
+- **Single memorable claim, not a paragraph** → "systems. security. intelligence." ✓
+- **Every page: ordered sections + a named CTA; strongest work leads** → yes; work
+  leads with the upstream kernel contribution. ✓
+- **CTAs ladder up to the one Chapter-1 action** → every rung resolves to email or to
+  the work; no competing destinations. ✓
+- **Honest gather-list, build not blocked** → six items, two of them real defects
+  found by re-checking production, not guesses. ✓
+
+**Revised this pass:** the previous map described a build with a terminal panel, a
+`⌘K` palette, an odometer stats row and a game section. The site has since been
+rebuilt and none of that is on the home page. This version is written from the
+deployed DOM (links, headings, computed CSS), not from memory.

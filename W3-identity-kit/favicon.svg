@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" role="img" aria-label="migarci2.dev">
-  <rect width="32" height="32" rx="4" fill="#0F0E0C"/>
-  <text x="5" y="21" font-family="'Geist Pixel Square','SFMono-Regular',ui-monospace,monospace"
-        font-size="14" font-weight="700" fill="#F0E8D4" letter-spacing="-0.5">m</text>
-  <rect x="17" y="9" width="9" height="13" fill="#E8B557"/>
+  <rect width="32" height="32" rx="6" fill="#0F0E0C"/>
+  <path d="M8 10.5 L14 16 L8 21.5" fill="none" stroke="#E8B557" stroke-width="2.6" stroke-linecap="square"/>
+  <rect x="16.5" y="19" width="8" height="2.8" fill="#E8B557"/>
+</svg>
