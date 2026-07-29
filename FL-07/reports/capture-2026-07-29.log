@@ -1,0 +1,46 @@
+Script started on 2026-07-29 12:38:06+02:00 [COMMAND="/home/dark/Desktop/FlyRank/FL-07/scout.sh" <not executed on terminal>]
+I'll reconcile the portal with the repo. Starting with the full assignment list and my submissions.
+  → Bash: tools/flyrank list --all
+  → Bash: tools/flyrank submissions
+  → Bash: tools/flyrank list --week 1
+  → Bash: tools/flyrank list --week 2
+  → Bash: tools/flyrank list --week 3
+  → Bash: tools/flyrank list --week 4
+  → Bash: tools/flyrank list --week 5
+  → Bash: tools/flyrank list --week 6
+  → Bash: tools/flyrank list --week 7
+  → Bash: tools/flyrank list --week 8
+  → Bash: tools/flyrank list --week 9
+Week 9 repeats week 8's list, so those need `show`, as do BE-06 and the six codes that appear in no week listing. Running the detail pages.
+  → Bash: tools/flyrank show BE-06
+  → Bash: tools/flyrank show fl-cap
+  → Bash: tools/flyrank show CUSTOM-MQYD228M-6B8AF540
+  → Bash: tools/flyrank show CUSTOM-MQYDFTAA-3868633D
+  → Bash: tools/flyrank show CUSTOM-MQYC2OKX-00A4F545
+  → Bash: tools/flyrank show CUSTOM-MQX0QS1O-B788D1AA
+  → Bash: tools/flyrank show CUSTOM-MQYD5DXU-19C5C7D4
+  → Bash: tools/flyrank show CUSTOM-MQX0KCLI-2775152F
+  → Bash: tools/flyrank show FL-09
+  → Bash: tools/flyrank show CUSTOM-MQX0LDQC-0D807C09
+  → Bash: tools/flyrank show CUSTOM-MQX0P6DW-02B21A98
+  → Bash: tools/flyrank show CUSTOM-MQX0Q5QE-6FE1938E
+All weeks resolved. Now checking repo evidence for the missing assignments.
+  → Bash: ls /home/dark/Desktop/FlyRank
+  → Bash: git log --oneline -1 -- FL-06; git log --oneline -1 -- FL-07; git log --oneline -1 -- PF-04; git log
+  → Bash: ls /home/dark/Desktop/FlyRank/BE-02 /home/dark/Desktop/FlyRank/FL-06 /home/dark/Desktop/FlyRank/FL-0
+## Submitted
+
+- FL-01 — AI Workflow Audit and Tool Setup
+- CUSTOM-MQWZGZCD-45C6C6BE — Draw the Path: Portfolio Sitemap + Toolkit
+- CUSTOM-MQWZHD18-5B447868 — What Are You Proving?
+- FL-02 — Prompting Fundamentals on Real Tasks v2
+- CUSTOM-MRBSNHWC-B3701520 — The Prompt Ladder
+- CUSTOM-MQWZWF7R-9D0535B1 — Frame It as Cases: Work That Speaks for Itself
+- BE-01 — Build your first CRUD API
+- CUSTOM-MR
+
+✓ run finished: 27 turns, 183s
+[?25hreport:     FL-07/reports/week-scout-2026-07-29.md
+transcript: FL-07/reports/transcript-2026-07-29.jsonl
+
+Script done on 2026-07-29 12:41:12+02:00 [COMMAND_EXIT_CODE="0"]
