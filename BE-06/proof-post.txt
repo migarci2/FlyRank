@@ -1,0 +1,9 @@
+HTTP/1.1 202 Accepted
+Content-Type: application/json
+Location: /jobs/6761074e-b902-4c00-bdca-715686e5498c
+Date: Wed, 29 Jul 2026 15:28:59 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+Transfer-Encoding: chunked
+
+{"id":"6761074e-b902-4c00-bdca-715686e5498c","type":"summarize","status":"queued","attempts":0,"result":null,"error":null,"created_at":1785338939280,"updated_at":1785338939280}

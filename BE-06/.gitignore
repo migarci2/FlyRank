@@ -1,0 +1,7 @@
+jobs.db*
+alerts.log
+test-*
+dbg*
+proof-server.log
+proof-worker.log
+proof-id.txt

@@ -1,0 +1,13 @@
+{
+    "id": "6761074e-b902-4c00-bdca-715686e5498c",
+    "type": "summarize",
+    "status": "done",
+    "attempts": 1,
+    "result": {
+        "summary": "The list has a single task, \"added by hand in SQL,\" and it is not done yet, so overall progress stands at zero of one items complete \u2014 the only thing on the list is still open and waiting to be finished.",
+        "tasks": 1
+    },
+    "error": null,
+    "created_at": 1785338939280,
+    "updated_at": 1785338986790
+}
