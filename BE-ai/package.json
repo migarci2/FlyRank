@@ -1,0 +1,15 @@
+{
+  "name": "flyrank-triage-api",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node --env-file-if-exists=.env server.js",
+    "test": "node test.js",
+    "eval": "node --env-file-if-exists=.env evals/run.js"
+  },
+  "dependencies": {
+    "openai": "^7.4.0",
+    "zod": "^4.4.3"
+  }
+}
