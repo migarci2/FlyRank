@@ -18,7 +18,7 @@ Hardening run: 2026-08-11
 
 ## Evidence
 
-- Cloudflare Worker release: `f7b0a4f0-dd7d-4490-89e5-4cd4d9d40dee`
+- Cloudflare Worker release: `2e686f85-28e1-4441-ab70-7d8c584561b8`
 - HTTPS custom domain: [https://migarci2.dev](https://migarci2.dev)
 - SEO: [robots.txt](https://migarci2.dev/robots.txt) and [sitemap.xml](https://migarci2.dev/sitemap.xml)
 - Analytics proof: [live counter JSON](https://migarci2.dev/api/visit)

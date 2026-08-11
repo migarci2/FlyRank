@@ -3,7 +3,7 @@
 ## Live launch evidence
 
 - Custom domain over HTTPS: [https://migarci2.dev](https://migarci2.dev)
-- Cloudflare Worker release: `f7b0a4f0-dd7d-4490-89e5-4cd4d9d40dee`
+- Cloudflare Worker release: `2e686f85-28e1-4441-ab70-7d8c584561b8`
 - Privacy-friendly page-view analytics: [https://migarci2.dev/api/visit](https://migarci2.dev/api/visit)
 - Installed analytics evidence: [analytics-installed.png](./analytics-installed.png) (`4` real QA page loads recorded on launch day).
 - Social preview: Open Graph and Twitter summary metadata use the deployed portrait, title, and description.
